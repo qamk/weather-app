@@ -1,72 +1,32 @@
 const domCreator = (() => {
 
-  const articleElement = (root, ...classes) => {
-    let article = document.createElement('article');
-    root.appendChild(article);
-    
-    return article;
+  const emptyObj = (obj) => Object.keys(obj) === 0;
+
+  const emptyArray = (arr) => arr.length === 0; 
+
+  const elementGenerator = ({root, elementName, classes = [], attributes = {}} = {}) => {
+    if (!elementName) { return } // require an element
+    let element = document.createElement(elementName);
+    emptyArray(classes) || imbueWithClasses(element, classes);
+    emptyObj(attributes) || imbueWithAttributes(element, attributes); // Only call if attributes are supplied
+    root.appendChild(element);
+    return element;
   }
 
-  const h2Element = (root, text, ...classes) => {
-    let h2 = document.createElement('h2');
-    h2.innerHTML = text;
-    root.appendChild(h2);
+  const imbueWithClasses = (element, classes) => {
+    for (let klass of classes) {
+      element.classList.add(klass);
+    }
   }
 
-  const divElement = (root, ...classes) => {
-    let div = document.createElement('div');
-    root.appendChild(div);
-    
-    return div;
-  }
-
-  const paraElement = (root, ...classes) => {
-    let p = document.createElement('p');
-    root.appendChild(p);
-    
-    return p;
-  }
-
-  const sectionElement = (root, ...classes) => {
-    let section = document.createElement('section');
-    root.appendChild(section);
-    
-    return section;
-  }
-
-  const figureElement = (root, imgElement, ...classes) => {
-    let figure = document.createElement('figure');
-    root.appendChild(figure);
-    figure.appendChild(imgElement);
-    return figure;
-  }
-
-  const imgElement = (src) => {
-    let img = document.createElement('img');
-    img.src = src;
-    return img;
-  }
-
-  const inputElement = (root, type) => {
-    let input = document.createElement('input');
-    input.type = type || 'text';
-    root.appendChild(input);
-    return input;
-  }
-
-  const buttonElement = (root, textContent, data) => {
-    let button = document.createElement('button');
-    data && button.setAttribute('data-name', data);
-    button.innerHTML = textContent || '';
-    root.appendChild(button);
-    return button;
-  }
-
-  const spanElement = (root, textContent) => {
-    let span = document.createElement('span');
-    span.innerHTML = textContent;
-    root.appendChild(span);
-    return span;
+  const imbueWithAttributes = (element, attributes) => {
+    for (let [attrName, attrValue] of Object.entries(attributes)) {
+      try {
+      element[attrName] = attrValue;
+      } catch (err) {
+        console.log(err);
+      }
+    }
   }
 
   const ulGenerator = (root, childCount, id) => {
@@ -81,11 +41,7 @@ const domCreator = (() => {
     return ul;
   }
 
-  return {
-          articleElement, divElement, paraElement, sectionElement,
-          figureElement, imgElement, inputElement, buttonElement,
-          spanElement, ulGenerator, h2Element,
-        }
+  return {ulGenerator, elementGenerator}
 
 })();
 
