@@ -1,23 +1,36 @@
-const searchPage = (domCreatorObj) => {
-  const _drawPage = (root) => {
-    // const root = document.getElementById('content');
-    const section = domCreatorObj.sectionElement(root);
-    const article = domCreatorObj.articleElement(section);
-    const input = domCreatorObj.inputElement(article);
-    const button = domCreatorObj.buttonElement(article, 'Submit Query');
+const searchPage = (domCreatorObj, root) => {
+  let interactive;
+  const drawPage = () => {
+    (root.childElementCount === 0) || root.removeChild(root.lastElementChild);
+    const section = domCreatorObj.elementGenerator({
+      root: root,
+      elementName: 'section',
+      classes: []
+    });
+    const article = domCreatorObj.elementGenerator({
+      root: section,
+      elementName: 'article',
+      classes: []
+    });
+    const input = domCreatorObj.elementGenerator({
+      root: article,
+      elementName: 'input',
+      classes: [],
+      attributes: {placeholder: 'e.g. london, uk'}
+    });
+    const button = domCreatorObj.elementGenerator({
+      root: article,
+      elementName: 'button',
+      classes: [],
+      attributes: {textContent: 'Submit Query'}
+    });
+
+    interactive = [button]
   }
 
-  const _setupListeners = (callback) => {
-    const button = document.querySelector('button');
-    button.addEvent('click', callback);
-  }
+  const getInteractive = () => interactive || [];
 
-  const run = (callback) => {
-    _drawPage();
-    _setupListeners(callback);
-  }
-
-  return { run };
+  return { drawPage, getInteractive };
 }
 
 export default searchPage;
