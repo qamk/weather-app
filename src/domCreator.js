@@ -1,29 +1,40 @@
 const domCreator = (() => {
-  const articleElement = (root) => {
+
+  const articleElement = (root, ...classes) => {
     let article = document.createElement('article');
     root.appendChild(article);
+    
     return article;
-  } 
+  }
 
-  const divElement = (root) => {
+  const h2Element = (root, text, ...classes) => {
+    let h2 = document.createElement('h2');
+    h2.innerHTML = text;
+    root.appendChild(h2);
+  }
+
+  const divElement = (root, ...classes) => {
     let div = document.createElement('div');
     root.appendChild(div);
+    
     return div;
   }
 
-  const paraElement = (root) => {
+  const paraElement = (root, ...classes) => {
     let p = document.createElement('p');
     root.appendChild(p);
+    
     return p;
   }
 
-  const sectionElement = (root) => {
+  const sectionElement = (root, ...classes) => {
     let section = document.createElement('section');
     root.appendChild(section);
+    
     return section;
   }
 
-  const figureElement = (root, imgElement) => {
+  const figureElement = (root, imgElement, ...classes) => {
     let figure = document.createElement('figure');
     root.appendChild(figure);
     figure.appendChild(imgElement);
@@ -43,9 +54,10 @@ const domCreator = (() => {
     return input;
   }
 
-  const buttonElement = (root, textContent) => {
+  const buttonElement = (root, textContent, data) => {
     let button = document.createElement('button');
-    button.innerHTML = textContent;
+    data && button.setAttribute('data-name', data);
+    button.innerHTML = textContent || '';
     root.appendChild(button);
     return button;
   }
@@ -57,20 +69,22 @@ const domCreator = (() => {
     return span;
   }
 
-  const ulGenerator = (root, childCount) => {
+  const ulGenerator = (root, childCount, id) => {
     let ul = document.createElement('ul');
+    ul.id = id;
     for (let i=0; i<childCount; i++) {
       let listItem = document.createElement('li');
       listItem.setAttribute('data-id', i);
       ul.appendChild(listItem);
     }
+    root.appendChild(ul);
     return ul;
   }
 
   return {
           articleElement, divElement, paraElement, sectionElement,
           figureElement, imgElement, inputElement, buttonElement,
-          spanElement, ulGenerator
+          spanElement, ulGenerator, h2Element,
         }
 
 })();
