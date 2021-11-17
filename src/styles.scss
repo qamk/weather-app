@@ -1,9 +1,8 @@
-// Import
 @use 'sass:math';
 
 // Theme Colours
 $theme-colour-primary: rgb(89, 150, 230);
-$theme-colour-accent: rgb(165, 71, 54);
+$theme-colour-accent: rgb(165, 62, 44);
 $theme-colour-bg-primary: #3d8f7a;
 $primary-colour: #3651c7;
 $warning-colour: #c9be28;
@@ -19,9 +18,13 @@ $container-width: 980px;
 $column-gutters: 20px;
 $row-gutters: 10px;
 
+// Basic padding
+$pad-main-x: 10px;
+$pad-main-y: 10px;
+
 // Borders
 $border-width: 2px;
-$border-radius: 3px;
+$border-radius: 4px;
 $border-style-primary: solid;
 $border-style-focus: dashed;
 $border-style-disabled: groove;
@@ -37,39 +40,103 @@ $box-shadow-colour: #9c4444;
   -webkit-box-sizing: border-box;
      -moz-box-sizing: border-box;
           box-sizing: border-box;
+  font-size: 18px;
+  font-family: $font-stack-primary;
 }
 
-@mixin basic-border($width-modifier: 0px) {
-  border: ($border-width + $width-modifier), $border-style-primary, $theme-colour-accent;
-  &:focus, &:active {
-    border-style: $border-style-focus;
+@mixin basic-border($width-modifier: 0px, $border-colour: $theme-colour-accent) {
+  @if $border-colour == none {
+    border: none;
+  } @else {
+    border: ($border-width + $width-modifier) $border-style-primary $border-colour;
   }
 }
 
-@mixin button($pad-x: 10px, $pad-y: 15px) {
+@mixin button($pad-x: $pad-main-x, $pad-y: $pad-main-y) {
   padding: $pad-y $pad-x;
   border: none;
-  box-shadow: $box-shadow-x $box-shadow-y $box-shadow-blur $box-shadow-colour;
-  transition: all 2s ease-out 200ms;
-
-  &:active {
+  // transition: all 2s ease-out 200ms;
+  
+  &:active, &:focus {
     border: $border-width $border-style-disabled $focus-colour;
+    box-shadow: $box-shadow-x $box-shadow-y $box-shadow-blur $focus-colour;
   }
 
 }
 
-@mixin block-theme($bg-colour: $theme-colour-primary, $border-colour: $theme-colour-accent) {
+@mixin block-theme($bg-colour: $theme-colour-primary, $border-colour: $theme-colour-accent, $border-modifier: 3px) {
   background-color: $theme-colour-bg-primary;
-  @include basic-border($width-modifier: 3px);
+  $border-width: 3px + $border-modifier;
+  @include basic-border($width-modifier: $border-width);
 }
 
 .cols {
   width: $container-width;
 }
 
-@for $divisor from 1 to 6 {
-  .col-#{$divisor} {
-    width: math.div($container-width, $divisor) * 100%;
+@for $span from 1 to 6 {
+  .col-1-over-#{$span} {
+    $absolute-width: math.div($container-width, $span) + ($column-gutters * ($span - 1));
+    @if $span == 12 {
+      width: $absolute_width;
+    } @else {
+      width: math.div($absolute_width, $container-width) * 100%;
+    }
     margin-right: $column-gutters;
+    float: left;
   }
+  }
+
+.flex {
+  display: flex;
+  width: $container-width;
+  height: 100%;
+
+  &.just-center {
+    justify-content: center;
+  }
+
+  &.just-start {
+    justify-content: flex-start;
+  }
+
+  &.just-around {
+    justify-content: space-around;
+  }
+
+  &.just-between {
+    justify-content: space-between;
+  }
+
+  &.align-center {
+    align-items: center;
+  }
+
+  &.align-end {
+    align-items: flex-end;
+  }
+
+  &.self-center {
+    margin: 0 auto;
+  }
+
 }
+
+.section {
+  height: 300px;
+  padding: 2em 0;
+}
+
+.bg-main-container {
+  @include block-theme($border-modifier: -4px);
+}
+
+.input {
+  padding: $pad-main-y;
+}
+
+.button {
+  @include button();
+}
+
+

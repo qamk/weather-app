@@ -1,0 +1,20 @@
+// Reset default browser styles
+
+html, body, h1, h2, h3, h4, h5, h6, p, span, blockquote,
+label, ul, li, dl, dt, form, fieldset, strong, b, em, i,
+figcaption, figure, article, nav, main, div, span, section,
+audio, video, a, button, input {
+  padding: 0;
+  margin: 0;
+  border: 0;
+  outline: none;
+  font-size: 100%;
+}
+
+body {
+  line-height: 1;
+}
+
+nav ul li {
+  list-style: none;
+}
