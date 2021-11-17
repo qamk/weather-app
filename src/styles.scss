@@ -1,0 +1,75 @@
+// Import
+@use 'sass:math';
+
+// Theme Colours
+$theme-colour-primary: rgb(89, 150, 230);
+$theme-colour-accent: rgb(165, 71, 54);
+$theme-colour-bg-primary: #3d8f7a;
+$primary-colour: #3651c7;
+$warning-colour: #c9be28;
+$success-colour: #46bd34;
+$focus-colour: #dd8839;
+
+// Typography
+$font-stack-primary: Georgia, Helvetica, serif;
+$font-stack-secontdary: Verdana, Tahoma, sans-serif;
+
+// Fluid-grid
+$container-width: 980px;
+$column-gutters: 20px;
+$row-gutters: 10px;
+
+// Borders
+$border-width: 2px;
+$border-radius: 3px;
+$border-style-primary: solid;
+$border-style-focus: dashed;
+$border-style-disabled: groove;
+
+// Box shadow
+$box-shadow-x: 2px;
+$box-shadow-y: 1px;
+$box-shadow-blur: 3px;
+$box-shadow-colour: #9c4444;
+
+* {
+  // If you use #{vendor}-#{property} a lot I recommend using a mixin and passing in the property
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+@mixin basic-border($width-modifier: 0px) {
+  border: ($border-width + $width-modifier), $border-style-primary, $theme-colour-accent;
+  &:focus, &:active {
+    border-style: $border-style-focus;
+  }
+}
+
+@mixin button($pad-x: 10px, $pad-y: 15px) {
+  padding: $pad-y $pad-x;
+  border: none;
+  box-shadow: $box-shadow-x $box-shadow-y $box-shadow-blur $box-shadow-colour;
+  transition: all 2s ease-out 200ms;
+
+  &:active {
+    border: $border-width $border-style-disabled $focus-colour;
+  }
+
+}
+
+@mixin block-theme($bg-colour: $theme-colour-primary, $border-colour: $theme-colour-accent) {
+  background-color: $theme-colour-bg-primary;
+  @include basic-border($width-modifier: 3px);
+}
+
+.cols {
+  width: $container-width;
+}
+
+@for $divisor from 1 to 6 {
+  .col-#{$divisor} {
+    width: math.div($container-width, $divisor) * 100%;
+    margin-right: $column-gutters;
+  }
+}
