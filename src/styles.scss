@@ -1,17 +1,17 @@
 @use 'sass:math';
 
 // Theme Colours
-$theme-colour-primary: rgb(89, 150, 230);
-$theme-colour-accent: rgb(165, 62, 44);
-$theme-colour-bg-primary: #3d8f7a;
-$primary-colour: #3651c7;
+$theme-colour-primary: rgba(114, 172, 187, .4);
+$theme-colour-accent: rgb(190, 94, 91);
+$theme-colour-secondary: #3d8f7a;
+$primary-colour: #4078cc;
 $warning-colour: #c9be28;
 $success-colour: #46bd34;
 $focus-colour: #dd8839;
 
 // Typography
 $font-stack-primary: Georgia, Helvetica, serif;
-$font-stack-secontdary: Verdana, Tahoma, sans-serif;
+$font-stack-secondary: Verdana, Tahoma, sans-serif;
 
 // Fluid-grid
 $container-width: 980px;
@@ -55,7 +55,6 @@ $box-shadow-colour: #9c4444;
 @mixin button($pad-x: $pad-main-x, $pad-y: $pad-main-y) {
   padding: $pad-y $pad-x;
   border: none;
-  // transition: all 2s ease-out 200ms;
   
   &:active, &:focus {
     border: $border-width $border-style-disabled $focus-colour;
@@ -64,12 +63,39 @@ $box-shadow-colour: #9c4444;
 
 }
 
-@mixin block-theme($bg-colour: $theme-colour-primary, $border-colour: $theme-colour-accent, $border-modifier: 3px) {
-  background-color: $theme-colour-bg-primary;
+@mixin block-theme($bg-colour: $theme-colour-secondary, $border-colour: $theme-colour-accent, $border-modifier: 3px) {
+  background-color: $bg-colour;
   $border-width: 3px + $border-modifier;
   @include basic-border($width-modifier: $border-width);
 }
 
+// Margins
+@for $i from 1 to 6 {
+  .m-#{$i} {
+    $margin-shift: (2.5px * $i) + ($i - 1);
+    margin: $margin-shift;
+  }
+}
+
+// Titles (h1-h6)
+@for $i from 1 to 7 {
+  .title-#{$i} {
+    font-family: $font-stack-primary;
+    $title-size: 2.2rem - (.25rem * $i);
+    padding: $pad-main-y + 3px;
+    font-size: $title-size;
+    width: 100%;
+    &.weight-normal {
+      font-weight: normal;
+    }
+  }
+}
+
+.title-1 {
+  letter-spacing: 10px;
+}
+
+// Columns
 .cols {
   width: $container-width;
 }
@@ -77,7 +103,7 @@ $box-shadow-colour: #9c4444;
 @for $span from 1 to 6 {
   .col-1-over-#{$span} {
     $absolute-width: math.div($container-width, $span) + ($column-gutters * ($span - 1));
-    @if $span == 12 {
+    @if $span == 6 {
       width: $absolute_width;
     } @else {
       width: math.div($absolute_width, $container-width) * 100%;
@@ -85,11 +111,22 @@ $box-shadow-colour: #9c4444;
     margin-right: $column-gutters;
     float: left;
   }
+}
+
+@mixin clearfix {
+  &::after,
+  &::before {
+    content: "";
+    display: table;
   }
+  &::after {
+    clear: both;
+  }
+}
 
 .flex {
   display: flex;
-  width: $container-width;
+  max-width: $container-width;
   height: 100%;
 
   &.just-center {
@@ -122,13 +159,60 @@ $box-shadow-colour: #9c4444;
 
 }
 
-.section {
-  height: 300px;
-  padding: 2em 0;
+.brand {
+  width: 400px;
+  @media screen and (max-width: 550px) {
+    width: 100%;
+  }
+  padding: $pad-main-y;
+  &:hover {
+    @include basic-border($border-colour: $focus-colour);
+  }
 }
 
-.bg-main-container {
+.subtitle {
+  font-size: 1.2rem;
+  display: block;
+  color: #224;
+  text-transform: capitalize;
+}
+
+.section {
+  height: 300px;
+  padding: 2em 1em;
+  &.height-med-len {
+    height: 480px;
+  }
+}
+
+.container-bg-primary {
   @include block-theme($border-modifier: -4px);
+}
+
+.container-bg {
+  @include block-theme($bg-colour: $theme-colour-primary);
+}
+
+.container-medium {
+  width: 500px;
+  @media screen and (max-width: 545px) {
+    max-width: 500px;
+    width: auto;
+  }
+  height: auto;
+  padding: $pad-main-y + 4px;
+}
+
+.container-wide {
+  width: 800px;
+  height: auto;
+  padding: $pad-main-y + 8px;
+}
+
+.container-narrow {
+  width: 350px;
+  height: auto;
+  padding: $pad-main-y;
 }
 
 .input {
@@ -139,4 +223,28 @@ $box-shadow-colour: #9c4444;
   @include button();
 }
 
+.link {
+  cursor: pointer;
+  &:hover {
+    color: $theme-colour-accent;
+  }
+  &.primary:hover {
+    color: $primary-colour;
+  }
+  &.warning:hover {
+    color: $warning-colour;
+  }
+  &.success:hover {
+    color: $success-colour;
+  }
+}
 
+.list {
+  li {
+    font-size: 1.2rem;
+    font-weight: 500;
+    padding: $pad-main-y;
+    font-family: $font-stack-secondary;
+  }
+  height: auto;
+}
