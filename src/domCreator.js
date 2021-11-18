@@ -29,9 +29,10 @@ const domCreator = (() => {
     }
   }
 
-  const ulGenerator = (root, childCount, id) => {
+  const ulGenerator = ({root, childCount, classes = [], attributes = []} = {}) => {
     let ul = document.createElement('ul');
-    ul.id = id;
+    imbueWithClasses(ul, classes);
+    imbueWithAttributes(ul, attributes);
     for (let i=0; i<childCount; i++) {
       let listItem = document.createElement('li');
       listItem.setAttribute('data-id', i);
