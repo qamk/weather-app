@@ -37,7 +37,7 @@ const Weatherfetcher = () => {
       if (data.cod == '404') { throw 'Invalid query' };
       dataObj = data;
     } catch (error) {
-      console.log('error');
+      console.log(data);
       return new Error(error);
     }
     return _summedData();
