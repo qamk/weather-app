@@ -107,9 +107,7 @@ const main = (() => {
 
   const addWeatherDescription = () => {
     const weatherElement = document.getElementById('weather');
-    console.log('descr before', weatherDescription);
     const weatherText = weatherDescription.join(" ~ ");
-    console.log('descr after', weatherText);
     weatherElement.innerHTML = weatherText;
   }
 
