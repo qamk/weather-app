@@ -135,7 +135,9 @@ const main = (() => {
 
   const setTitleButton = () => {
     const h1 = document.querySelector('h1');
-    h1.addEventListener('click', run);
+    h1.addEventListener('click', function() {
+      run(search);
+    });
   }
 
   return { run, setTitleButton }
