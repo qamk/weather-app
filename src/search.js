@@ -5,24 +5,24 @@ const searchPage = (domCreatorObj, root) => {
     const section = domCreatorObj.elementGenerator({
       root: root,
       elementName: 'section',
-      classes: []
+      classes: ['section', 'container-bg-primary']
     });
     const article = domCreatorObj.elementGenerator({
       root: section,
       elementName: 'article',
-      classes: []
+      classes: ['flex', 'just-center', 'align-end', 'self-center']
     });
     const input = domCreatorObj.elementGenerator({
       root: article,
       elementName: 'input',
-      classes: [],
-      attributes: {placeholder: 'e.g. london, uk'}
+      classes: ['input'],
+      attributes: { placeholder: 'e.g. london, uk', required: true }
     });
     const button = domCreatorObj.elementGenerator({
       root: article,
       elementName: 'button',
-      classes: [],
-      attributes: {textContent: 'Submit Query'}
+      classes: ['button'],
+      attributes: { textContent: 'Submit Query', type: 'submit' }
     });
 
     interactive = [button]

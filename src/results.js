@@ -6,12 +6,25 @@ const resultsPage = (domCreatorObj, root) => {
     const section = domCreatorObj.elementGenerator({
       root: root,
       elementName: 'section',
-      classes: [],
+      classes: ['section', 'height-med-len'],
     });
     const titleDiv = domCreatorObj.elementGenerator({
       root: section,
       elementName: 'div',
-      classes: []
+      classes: ['container-medium']
+    });
+    const titleh2 = domCreatorObj.elementGenerator({
+      root: titleDiv,
+      elementName: 'h2',
+      classes: ['title-2', 'weight-normal'],
+      attributes: { innerHTML: 'Weather search results:' }
+    })
+    const titlePara = domCreatorObj.elementGenerator({
+      root: titleDiv,
+      elementName: 'p',
+      classes: ['subtitle'],
+      attributes: { id: 'weather' }
+
     });
     const cardDiv = domCreatorObj.elementGenerator({
       root: section,
@@ -21,31 +34,36 @@ const resultsPage = (domCreatorObj, root) => {
     const article = domCreatorObj.elementGenerator({
       root: cardDiv,
       elementName: 'div',
-      classes: [],
+      classes: ['container-bg'],
     });
     const buttonDiv = domCreatorObj.elementGenerator({
         root: article,
         elementName: 'div',
-        classes: [],
+        classes: ['container-narrow'],
       });
     const fButton = domCreatorObj.elementGenerator({
         root: buttonDiv,
         elementName: 'button',
-        classes: [],
+        classes: ['button', 'm-5'],
         attributes: {textContent: 'Fahrenheit', id: 'f'}
       });
     const cButton = domCreatorObj.elementGenerator({
         root: buttonDiv,
         elementName: 'button',
-        classes: [],
-        attributes: {textContent: 'Celsius', id: 'c'}
+        classes: ['button'],
+        attributes: {textContent: 'Celsius', id: 'c', disabled: true}
       });
     const dataDiv = domCreatorObj.elementGenerator({
       root: article,
       elementName: 'div',
-      classes: [],
+      classes: ['cols', 'container-medium'],
     });
-    const dataList = domCreatorObj.ulGenerator(dataDiv, 4, 'data_list');
+    const dataList = domCreatorObj.ulGenerator({
+      root: dataDiv,
+      childCount: 4,
+      classes: ['col-3', 'list'],
+      attributes: { id: 'data_list' }
+    });
     
     interactive = [fButton, cButton];
   }
