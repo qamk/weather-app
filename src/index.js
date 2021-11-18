@@ -3,6 +3,7 @@ import Weatherfetcher from "./fetch";
 import resultsPage from "./results";
 import searchPage from "./search";
 import unitHandler from "./unitsHandler";
+import './main.scss';
 
 const main = (() => {
   const root = document.getElementById('content');
@@ -10,7 +11,7 @@ const main = (() => {
   const results = resultsPage(domCreator, root);
   const apiCaller = Weatherfetcher();
   const unitHandlerObj = unitHandler;
-  let data, listItems, weather, windSpeed;
+  let data, temperatureValues, weatherDescription, windSpeed;
   
   const onClick = (element, callback) => {
     element.addEventListener('click', callback);
@@ -25,12 +26,14 @@ const main = (() => {
     return element.value;
   }
 
-  const setInnerHTML = (nodeList, text) => {
+  const setInnerHTML = (nodeList, text, units) => {
     for ( let node of nodeList ) {
       let index = +node.dataset.id;
-      node.innerHTML = text[index].join(': ');
+      const nodeText = text[index].join(': ');
+      const nodeUnits = unitHandlerObj.units(units);
+      node.innerHTML = nodeText + nodeUnits;
     }
-    listItems = text;
+    temperatureValues = text;
   }
 
   const dataListChildren = () => {
@@ -51,7 +54,7 @@ const main = (() => {
       min: 'Minimum Temperature',
       max: 'Maximum Temperature',
       feels: 'Feels Like',
-      description: 'Forecast for today is',
+      description: 'Today we have',
       speed: 'Wind speed'
     }
 
@@ -60,27 +63,54 @@ const main = (() => {
       const newLabel = newLables[label];
       entries.push([newLabel, value]);
     }
-    console.log('entries', entries)
     return entries;
   }
+
+  const toggleDisable = (id) => {
+    const unclickedId = (id === 'f') ? 'c': 'f';
+    const unclickedButton = document.getElementById(unclickedId);
+    const clickedButton = document.getElementById(id);
+    unclickedButton.removeAttribute('disabled');
+    clickedButton.disabled = true;
+  }
+
+   const populateElements = (listVals, units = 'c') => {
+    const listChildren = dataListChildren();
+    temperatureValues = listVals || temperatureValues;
+    setInnerHTML(listChildren, temperatureValues, units);
+   }
 
   const toggleUnits = (e) => {
     const convert = { c: unitHandlerObj.toCelsius, f: unitHandlerObj.toFahrenheit };
     const toUnit = e.target.id;
-    const temperatureValues = listItems.splice(0, 4);
     const convertedValues = convert[toUnit](temperatureValues);
-    const listChildren = dataListChildren();
-    let listText = convertedValues.concat(listItems);
-    setInnerHTML(listChildren, listText);
+    populateElements(convertedValues, toUnit);
+    toggleDisable(toUnit);
+  }
+
+  const roundObjValues = (obj) => {
+    for (let [key, value] of Object.entries(obj)) {
+      const roundValue = Math.round(value);
+      obj[key] = roundValue;
+    }
+    return obj;
   }
 
   const setDataValues = () => {
     let temperature = data.temperature;
     let weather = data.weather;
     let wind = data.wind;
-    weather = labeledValues(weather);
-    windSpeed = labeledValues(wind);
-    listItems = labeledValues(temperature);
+    weatherDescription = labeledValues(weather)[0];
+    windSpeed = labeledValues(wind)[0];
+    temperatureValues = labeledValues(roundObjValues(temperature));
+  }
+
+  const addWeatherDescription = () => {
+    const weatherElement = document.getElementById('weather');
+    console.log('descr before', weatherDescription);
+    const weatherText = weatherDescription.join(" ~ ");
+    console.log('descr after', weatherText);
+    weatherElement.innerHTML = weatherText;
   }
 
   const makeCall = async() => {
@@ -89,20 +119,28 @@ const main = (() => {
       data = await apiCaller.fetchHandler(query);
       if (data.message) throw data; // Throw it out the window...
     } catch (error) {
-      return alert(error)
+      return console.log(error);
     }
     run(results);
     setDataValues();
+    addWeatherDescription();
+    populateElements();
   }
 
   const run = (page = search) => {
     let callback = page === search ? makeCall : toggleUnits;
-    callDraw(page);
+    callDraw(page); // CHANGE BACK TO 'page'
     setInteractiveEvent(page, callback);
   }
 
-  return { run }
+  const setTitleButton = () => {
+    const h1 = document.querySelector('h1');
+    h1.addEventListener('click', run);
+  }
+
+  return { run, setTitleButton }
 
 })();
 
+main.setTitleButton();
 main.run()
